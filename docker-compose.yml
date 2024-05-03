@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: trabalho_pratico_modulo2
+      MARIADB_USER: usuario
+      MARIADB_PASSWORD: mys3cr3tdb
+    volumes:
+      - ./.docker/mysql/data:/var/lib/mysql
+
+  jupyterlab:
+    image: jupyter/datascience-notebook:latest
+    restart: always
+    ports:
+      - 8888:8888
+    volumes:
+      - .:/home/jovyan/work
+    environment:
+      JUPYTER_ENABLE_LAB: yes
+      GRANT_SUDO: yes
+    command: start-notebook.sh --NotebookApp.token=''
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
